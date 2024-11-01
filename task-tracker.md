@@ -12,10 +12,11 @@ Need:
 - Convert paragraphs [x]
 - Convert bold [x]
 - Convert italics [x]
-- Convert ordered lists [ ]
+- Convert ordered lists [x]
 - Convert unordered lists [ ]
 - Convert images [ ]
 - Convert links [ ]
+- Replace straight quotes with curly quotes: &ldquo &rdquo
 
 Maybe:
 - Convert code and code blocks [ ]

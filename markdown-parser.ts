@@ -30,8 +30,13 @@ const parser = async (file: string): Promise<string> => {
     crlfDelay: Infinity,
   });
   let output: Array<string> = [];
+  let ol = false;
   // using basic md syntax from https://www.markdownguide.org/basic-syntax/
   for await (let line of lineReader) {
+    // skip empty lines
+    if (line.length === 0) {
+      continue;
+    }
     // check for emphasis
     let i = 0;
     while (i < line.length) {
@@ -60,7 +65,10 @@ const parser = async (file: string): Promise<string> => {
           let j = i + 2;
           while (j < line.length) {
             if (line[j] === "*") {
-              line = `${line.slice(0,i)}<em>${line.slice(i+1,j)}</em>${line.slice(j+1)}`
+              line = `${line.slice(0, i)}<em>${line.slice(
+                i + 1,
+                j
+              )}</em>${line.slice(j + 1)}`;
               break;
             }
             j++;
@@ -70,20 +78,56 @@ const parser = async (file: string): Promise<string> => {
       i++;
     }
     // heading 1-6
-    if (line.trim()[0] === "#") {
-      const headingArray: Array<string> = line.trim().split(" ");
+    let trimmedLine = line.trim();
+    if (trimmedLine[0] === "#") {
+      const headingArray: Array<string> = trimmedLine.split(" ");
       const headingLevel: number = headingArray[0].length;
       if (headingLevel > 6) {
         console.error(
           `Invalid md. Tried to pass as heading, only supports up to h6: ${line}`
         );
+        continue;
       } else {
         const headingText: string = headingArray.slice(1).join(" ");
         output.push(`<h${headingLevel}>${headingText}</h${headingLevel}>`);
+        continue;
       }
-    } else {
-      output.push(`<p>${line}</p>`);
     }
+    // ordered lists
+    if (Number.isInteger(parseInt(trimmedLine[0]))) {
+      let i = 1
+      let liFound = false
+      while (i < trimmedLine.length) {
+        if (trimmedLine[i] === "." && (trimmedLine[i+1] === " " || trimmedLine[i+1] === undefined)) {
+          if (!ol) {
+            output.push("<ol>")
+            ol = true
+          }
+          output.push(`<li>${trimmedLine.slice(i+2)}</li>`)
+          liFound = true
+          break;
+        } else if (Number.isInteger(parseInt(trimmedLine[i]))) {
+          i++
+          continue
+        } else {
+          break;
+        }
+      }
+      if (liFound) {
+        continue;
+      } 
+    } else {
+      if (ol) {
+        output.push("</ol>")
+        ol = false
+      }
+    }
+
+    output.push(`<p>${trimmedLine}</p>`);
+  }
+  // add closing ordered list tag if the list goes until end of file
+  if (ol) {
+    output.push("</ol>")
   }
   return output.join("\n");
 };
@@ -103,4 +147,5 @@ const generateHtmlFromMd = async (file: string): Promise<void> => {
   writer(parsedMd);
 };
 
+// generateHtmlFromMd("./posts/001.md");
 generateHtmlFromMd("./test.md");
