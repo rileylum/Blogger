@@ -52,8 +52,40 @@ const parser = async (file: string): Promise<string> => {
       ul = false;
     }
 
-    // check for emphasis
+    // check for links
     let i = 0;
+    while (i < line.length) {
+      // find opening [
+      if (line[i] === "[") {
+        // start looking for closing ]
+        let j = i+1 
+        while (j < line.length) {
+          if (line[j] === "]") {
+            // next character must be (
+            if (line[j+1] === "(") {
+              // look for closing )
+              let k = j+2
+              while (k < line.length) {
+                if (line[k] === ")") {
+                  console.log(i,j,k)
+                  console.log(line.slice(i,j+1))
+                  console.log(line.slice(j+1,k+1))
+                  line = `${line.slice(0,i)}<a href=${line.slice(j+2,k)}>${line.slice(i+1,j)}</a>${line.slice(k+1)}`
+                  console.log(line)
+                  break
+                }
+                k++
+              }
+            }
+          }
+          j++
+        }
+      }
+      i++
+    }
+
+    // check for emphasis
+    i = 0;
     while (i < line.length) {
       if (line[i] === "*") {
         if (line[i + 1] === "*") {
@@ -92,6 +124,10 @@ const parser = async (file: string): Promise<string> => {
       }
       i++;
     }
+
+    // reset trimmed line after links and emphasis added
+    trimmedLine = line.trim();
+
     // heading 1-6
     if (trimmedLine[0] === "#") {
       const headingArray: Array<string> = trimmedLine.split(" ");
@@ -150,7 +186,7 @@ const parser = async (file: string): Promise<string> => {
 
     // If no other conditions are met then write as paragraph
     output.push(`<p>${trimmedLine}</p>`);
-    
+
   }
   // add closing ordered list tag if the list goes until end of file
   if (ol) {
