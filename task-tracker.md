@@ -23,10 +23,12 @@ Maybe:
     - consider implementing https://www.markdownguide.org/extended-syntax/#fenced-code-blocks as it wont conflict with nesting elements in lists and is consistent between inline code and code blocks
 - Convert block quotes [ ]
 - Convert elements nested in lists [ ]
+    - And nested list elements [ ]
 - Convert horizontal rules [ ]
 - Honor escaping characters [ ]
 - Read in HTML tags [ ]
 - Custom JS [ ]
+- Handle different types and starts for ordered lists [ ]
 
 ### Read and interpet metadata/tags
 

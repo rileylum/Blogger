@@ -29,8 +29,13 @@ const parser = async (file: string): Promise<string> => {
     input: fileStream,
     crlfDelay: Infinity,
   });
+
   let output: Array<string> = [];
+
+  // tracking if a list is being written
   let ol = false;
+  let ul = false;
+
   // using basic md syntax from https://www.markdownguide.org/basic-syntax/
   for await (let line of lineReader) {
     // skip empty lines
@@ -93,41 +98,61 @@ const parser = async (file: string): Promise<string> => {
         continue;
       }
     }
+
     // ordered lists
     if (Number.isInteger(parseInt(trimmedLine[0]))) {
-      let i = 1
-      let liFound = false
+      let i = 1;
+      let liFound = false;
       while (i < trimmedLine.length) {
-        if (trimmedLine[i] === "." && (trimmedLine[i+1] === " " || trimmedLine[i+1] === undefined)) {
+        if (
+          trimmedLine[i] === "." &&
+          (trimmedLine[i + 1] === " " || trimmedLine[i + 1] === undefined)
+        ) {
           if (!ol) {
-            output.push("<ol>")
-            ol = true
+            output.push("<ol>");
+            ol = true;
           }
-          output.push(`<li>${trimmedLine.slice(i+2)}</li>`)
-          liFound = true
+          output.push(`<li>${trimmedLine.slice(i + 2)}</li>`);
+          liFound = true;
           break;
         } else if (Number.isInteger(parseInt(trimmedLine[i]))) {
-          i++
-          continue
+          i++;
+          continue;
         } else {
           break;
         }
       }
       if (liFound) {
         continue;
-      } 
-    } else {
-      if (ol) {
-        output.push("</ol>")
-        ol = false
       }
+    } else if (ol) {
+      output.push("</ol>");
+      ol = false;
+    }
+
+    // un-ordered lists
+    if (["-", "*", "+"].includes(trimmedLine[0])) {
+      if (trimmedLine[1] === " " || trimmedLine[1] === undefined) {
+        if (!ul) {
+          output.push("<ul>")
+          ul = true
+        }
+        output.push(`<li>${trimmedLine.slice(2)}</li>`)
+        continue;
+      }
+    } else if (ul) {
+      output.push("</ul>")
     }
 
     output.push(`<p>${trimmedLine}</p>`);
   }
   // add closing ordered list tag if the list goes until end of file
   if (ol) {
-    output.push("</ol>")
+    output.push("</ol>");
+  }
+  // add closing un-ordered list tag if the list goes until end of file
+  if (ul) {
+    output.push("</ul>");
   }
   return output.join("\n");
 };
