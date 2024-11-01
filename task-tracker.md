@@ -17,10 +17,10 @@ Need:
 - Convert images [x]
 - Convert links [x]
 - Replace straight quotes with curly quotes: &ldquo &rdquo [x]
-
-Maybe:
 - Convert code and code blocks [ ]
     - consider implementing https://www.markdownguide.org/extended-syntax/#fenced-code-blocks as it wont conflict with nesting elements in lists and is consistent between inline code and code blocks
+
+Maybe:
 - Convert block quotes [ ]
 - Convert elements nested in lists [ ]
     - And nested list elements [ ]
@@ -31,12 +31,12 @@ Maybe:
 - Handle different types and starts for ordered lists [ ]
 
 ### Read and interpet metadata/tags
+- Title [ ]
+- Publish Date [ ]
 
 ## Site Building
-
-### Generate all pages
-
-### Generate a home page with links
+- Create pages [ ]
+- Create home page [ ]
 
 ## Simple Server
 
