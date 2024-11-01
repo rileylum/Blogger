@@ -13,7 +13,7 @@ Need:
 - Convert bold [x]
 - Convert italics [x]
 - Convert ordered lists [x]
-- Convert unordered lists [ ]
+- Convert unordered lists [x]
 - Convert images [ ]
 - Convert links [ ]
 - Replace straight quotes with curly quotes: &ldquo &rdquo
