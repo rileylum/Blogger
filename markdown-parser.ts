@@ -42,6 +42,16 @@ const parser = async (file: string): Promise<string> => {
     if (line.length === 0) {
       continue;
     }
+    let trimmedLine = line.trim();
+    // check if not a list and add closing tags if previous line was a list
+    if (ol && !Number.isInteger(parseInt(trimmedLine[0]))) {
+      output.push("</ol>");
+      ol = false;
+    } else if (ul && !["-", "*", "+"].includes(trimmedLine[0])) {
+      output.push("</ul>")
+      ul = false;
+    }
+
     // check for emphasis
     let i = 0;
     while (i < line.length) {
@@ -83,7 +93,6 @@ const parser = async (file: string): Promise<string> => {
       i++;
     }
     // heading 1-6
-    let trimmedLine = line.trim();
     if (trimmedLine[0] === "#") {
       const headingArray: Array<string> = trimmedLine.split(" ");
       const headingLevel: number = headingArray[0].length;
@@ -125,9 +134,6 @@ const parser = async (file: string): Promise<string> => {
       if (liFound) {
         continue;
       }
-    } else if (ol) {
-      output.push("</ol>");
-      ol = false;
     }
 
     // un-ordered lists
@@ -140,11 +146,11 @@ const parser = async (file: string): Promise<string> => {
         output.push(`<li>${trimmedLine.slice(2)}</li>`)
         continue;
       }
-    } else if (ul) {
-      output.push("</ul>")
     }
 
+    // If no other conditions are met then write as paragraph
     output.push(`<p>${trimmedLine}</p>`);
+    
   }
   // add closing ordered list tag if the list goes until end of file
   if (ol) {
@@ -158,7 +164,7 @@ const parser = async (file: string): Promise<string> => {
 };
 
 const writer = async (html: string): Promise<void> => {
-  fs.writeFile("./output.html", template(html), (err) => {
+  fs.writeFile("./output/output.html", template(html), (err) => {
     if (err) {
       console.log(err);
     } else {
@@ -172,5 +178,4 @@ const generateHtmlFromMd = async (file: string): Promise<void> => {
   writer(parsedMd);
 };
 
-// generateHtmlFromMd("./posts/001.md");
 generateHtmlFromMd("./test.md");
