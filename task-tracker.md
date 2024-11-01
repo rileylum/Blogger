@@ -25,3 +25,16 @@ Maybe:
 - Convert horizontal rules [ ]
 - Honor escaping characters [ ]
 - Read in HTML tags [ ]
+- Custom JS [ ]
+
+### Read and interpet metadata/tags
+
+## Site Building
+
+### Generate all pages
+
+### Generate a home page with links
+
+## Simple Server
+
+### Express server to serve html
