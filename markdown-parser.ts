@@ -52,7 +52,7 @@ const parser = async (file: string): Promise<string> => {
       ul = false;
     }
 
-    // check for links
+    // check for links/images
     let i = 0;
     while (i < line.length) {
       // find opening [
@@ -67,7 +67,15 @@ const parser = async (file: string): Promise<string> => {
               let k = j+2
               while (k < line.length) {
                 if (line[k] === ")") {
-                  line = `${line.slice(0,i)}<a href=${line.slice(j+2,k)}>${line.slice(i+1,j)}</a>${line.slice(k+1)}`
+                  // image
+                  if (line[i-1] === "!") {
+                    line = `${line.slice(0,i-1)}<img src='${line.slice(j+2,k)}' alt='${line.slice(i+1,j)}'>${line.slice(k+1)}`
+                  } 
+                  // link
+                  else {
+                    line = `${line.slice(0,i)}<a href='${line.slice(j+2,k)}'>${line.slice(i+1,j)}</a>${line.slice(k+1)}`
+                  }
+                  
                   // move i along to search rest of string, set j and k to line length to end their loops
                   i = k
                   j = line.length

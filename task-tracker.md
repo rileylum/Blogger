@@ -14,7 +14,7 @@ Need:
 - Convert italics [x]
 - Convert ordered lists [x]
 - Convert unordered lists [x]
-- Convert images [ ]
+- Convert images [x]
 - Convert links [x]
 - Replace straight quotes with curly quotes: &ldquo &rdquo [x]
 
