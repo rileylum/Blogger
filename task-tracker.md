@@ -30,6 +30,11 @@ Maybe:
 - Custom JS [ ]
 - Handle different types and starts for ordered lists [ ]
 
+## CSS
+- Style Images [ ]
+- Style Code/Code Blocks [ ]
+
+
 ### Read and interpet metadata/tags
 - Title [ ]
 - Publish Date [ ]
