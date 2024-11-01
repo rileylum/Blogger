@@ -67,12 +67,11 @@ const parser = async (file: string): Promise<string> => {
               let k = j+2
               while (k < line.length) {
                 if (line[k] === ")") {
-                  console.log(i,j,k)
-                  console.log(line.slice(i,j+1))
-                  console.log(line.slice(j+1,k+1))
                   line = `${line.slice(0,i)}<a href=${line.slice(j+2,k)}>${line.slice(i+1,j)}</a>${line.slice(k+1)}`
-                  console.log(line)
-                  break
+                  // move i along to search rest of string, set j and k to line length to end their loops
+                  i = k
+                  j = line.length
+                  k = line.length
                 }
                 k++
               }
@@ -123,6 +122,24 @@ const parser = async (file: string): Promise<string> => {
         }
       }
       i++;
+    }
+
+    // replace quotes with html entities
+    i = 0 
+    while (i < line.length) {
+      if (line[i] === '"') {
+        let j = i+1
+        while (j < line.length) {
+          if (line[j] === '"') {
+            line = `${line.slice(0,i)}&ldquo;${line.slice(i+1,j)}&rdquo;${line.slice(j+1)}`
+            // move i up to end of quote, finish j loop
+            i = j+1
+            j = line.length
+          }
+          j++
+        } 
+      }
+      i++
     }
 
     // reset trimmed line after links and emphasis added

@@ -16,7 +16,7 @@ Need:
 - Convert unordered lists [x]
 - Convert images [ ]
 - Convert links [x]
-- Replace straight quotes with curly quotes: &ldquo &rdquo
+- Replace straight quotes with curly quotes: &ldquo &rdquo [x]
 
 Maybe:
 - Convert code and code blocks [ ]
