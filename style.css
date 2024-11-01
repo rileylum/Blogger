@@ -1,0 +1,15 @@
+html {
+    font-size: 18px;
+    font-family: Georgia, serif;
+}
+body {
+  margin: 2.5rem auto;
+  max-width: min(30rem,90%);
+  line-height: 1.6;
+  color: #444;
+  background-color: #EEE;
+}
+h1,h2,h3 {
+    line-height: 1.2;
+    font-family: Arial, sans-serif;
+}
