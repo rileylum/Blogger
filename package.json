@@ -1,0 +1,15 @@
+{
+  "name": "blogger",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && node --env-file=.env markdown-parser.js "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.7.9"
+  }
+}

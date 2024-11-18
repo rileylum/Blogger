@@ -1,0 +1,9 @@
+node_modules
+output.html
+output
+test.md
+**/*.js
+**/*.js.map
+posts/*.md
+assets
+.env
