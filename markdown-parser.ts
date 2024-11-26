@@ -466,7 +466,14 @@ const postCardTemplate = (post: ParsedMd): string => {
 
 const homeTemplate = (posts: ParsedMd[]): string => {
   const css = fs.readFileSync(config.cssFile, "utf8");
-  const body = posts.map((post) => postCardTemplate(post)).join("");
+  const body = posts.map((post) => {
+    if (post.metadata.publishDate > new Date(Date.now())) {
+      console.log(`Skipping post ${post.metadata.title}, as it isn't published yet.`)
+      return ""
+    } else {
+      return postCardTemplate(post)
+    }
+  }).join("");
   console.log("body: ", body);
   return `<!DOCTYPE html>
   <html lang="en">
