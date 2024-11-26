@@ -343,6 +343,12 @@ const createHtmlTags = (
     ) {
       newOutput.push("<pre>" + line.trim() + "</pre>");
       return [newOutput, olStatus, ulStatus, codeStatus];
+    } else if (
+      line.trim().slice(0,4) === "<img" &&
+      line.trim().slice(-1) === ">"
+    ) {
+      newOutput.push(line.trim())
+      return [newOutput, olStatus, ulStatus, codeStatus];
     }
   }
   if (firstChar === ">") {
