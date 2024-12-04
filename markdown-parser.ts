@@ -84,7 +84,7 @@ const checkEndUnOrderedList = (
 ): [Array<string>, GenericReadStatus] => {
   // IF THE NEXT LINE DOESN'T START WITH A VALID LIST CHARACTER
   const trimmedLine = line.trim();
-  if (trimmedLine[0] && !["-", "*", "+"].includes(trimmedLine[0])) {
+  if (trimmedLine[0] && !["-", "+"].includes(trimmedLine[0])) {
     const newOutput = [...output, "</ul>"];
     return [newOutput, GenericReadStatus.NotStarted];
   } else {
@@ -110,13 +110,20 @@ const replaceLinksImages = (line: string): string => {
               if (newLine[k] === ")") {
                 // IF STARTS WITH ! THEN IT IS AN IMAGE
                 if (newLine[i - 1] === "!") {
+                  const src = `${newLine.slice(j + 5, k)}`
+                  const dst = path.join(config.outputDir, `${newLine.slice(j + 4, k)}`)
                   newLine = `${newLine.slice(
                     0,
                     i - 1
-                  )}<img src='${newLine.slice(j + 2, k)}' alt='${newLine.slice(
+                  )}<img src='${newLine.slice(j + 2, k)}' ${newLine.slice(k+2,-1)} alt='${newLine.slice(
                     i + 1,
                     j
                   )}'>${newLine.slice(k + 1)}`;
+                  fs.copyFile(src,dst, (err) => {
+                    if (err) {
+                      console.error("failed to move image", err)
+                    }
+                  })
                 } else {
                   // ELSE IT IS A LINK
                   newLine = `${newLine.slice(0, i)}<a href='${newLine.slice(
@@ -327,7 +334,7 @@ const createHtmlTags = (
   // Unordered Lists
   if (
     firstChar &&
-    ["-", "*", "+"].includes(firstChar) &&
+    ["-", "+"].includes(firstChar) &&
     (line.trim()[1] === " " || line.trim()[1] === undefined)
   ) {
     const listOutput = createUnorderedList(line.trim(), ulStatus);
@@ -462,12 +469,11 @@ const postCardTemplate = (post: ParsedMd): string => {
   const readTime = Math.round(
     post.htmlString.replaceAll("\n", " ").split(" ").length / 200
   ).toString();
-  console.log(readTime);
-  return `<a href="posts/${post.metadata.title.toLowerCase()}.html" style="all:unset; cursor:pointer;"><div style="margin-bottom:2rem;">
+  return `<a href="posts/${post.metadata.title.toLowerCase().replaceAll(" ", "-")}.html" style="all:unset; cursor:pointer;"><div style="margin-bottom:2rem;">
     <h2>${post.metadata.title}</h2>
     <div style="display: flex; column-gap: 1em"><span><em>${formattedDate}</em></span><span><em>${readTime} min read</em></span></div>
     ${post.metadata.blurb}
-  </div></a>`;
+  </div></a><hr>`;
 };
 
 const homeTemplate = (posts: ParsedMd[]): string => {
@@ -480,7 +486,6 @@ const homeTemplate = (posts: ParsedMd[]): string => {
       return postCardTemplate(post)
     }
   }).join("");
-  console.log("body: ", body);
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -545,7 +550,7 @@ ${body}
 
 const writeHtml = async (data: ParsedMd): Promise<void> => {
   fs.writeFile(
-    path.join(config.outputDir, "posts", `${data.metadata.title.toLowerCase()}.html`),
+    path.join(config.outputDir, "posts", `${data.metadata.title.toLowerCase().replaceAll(" ", "-")}.html`),
     htmlTemplate(data),
     (err) => {
       if (err) {
@@ -554,7 +559,7 @@ const writeHtml = async (data: ParsedMd): Promise<void> => {
         console.log(
           `File written: ${
             config.outputDir
-          }/posts/${data.metadata.title.toLowerCase()}.html`
+          }/posts/${data.metadata.title.toLowerCase().replaceAll(" ", "-")}.html`
         );
       }
     }
