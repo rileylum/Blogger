@@ -29,9 +29,10 @@ Maybe:
 - Read in HTML tags [ ]
 - Custom JS [ ]
 - Handle different types and starts for ordered lists [ ]
+- Currently removed support for * as a symbol for unordered lists as it conflicts with italics and bolding, its easy to resolve but unordered lists already have two other symbols defined - + 
 
 ## CSS
-- Style Images [ ]
+- Style Images [x]
 - Style Code/Code Blocks [x]
 
 ### Read and interpet metadata/tags
@@ -41,6 +42,7 @@ Maybe:
 ## Site Building
 - Create posts [x]
 - Create home page [x]
+- Have a better dev and prod build step [ ]
 
 ## Simple Server
 
