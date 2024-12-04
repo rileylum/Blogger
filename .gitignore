@@ -7,3 +7,5 @@ test.md
 posts/*.md
 assets
 .env
+posts/.obsidian
+imgs/
